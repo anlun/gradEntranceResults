@@ -58,5 +58,5 @@ def tupComp(x, y):
 
 pos = 1
 for rec in sorted(scores.items(), cmp = tupComp):
-  print pos, rec[0], rec[1]
+  print str(pos) + '.', rec[0], rec[1]
   pos += 1
