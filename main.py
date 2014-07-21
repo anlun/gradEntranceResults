@@ -3,6 +3,8 @@
 
 import urllib, os
 from bs4 import BeautifulSoup
+import sys, codecs
+sys.stdout=codecs.getwriter('utf-8')(sys.stdout)
 
 names_file = 'https://cabinet.spbu.ru/Lists/ASP_EntryLists/list1_1_4_1000022_1000006_.html'
 names_filename = 'names.html'
