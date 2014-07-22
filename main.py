@@ -97,9 +97,9 @@ updateSpecResults()
 scores = {}
 for name in names:
   try:
-      scores[name] =  int(i_scores[0].get(name, -1))
-      scores[name] += int(i_scores[1].get(name, -1))
-      scores[name] += int(i_scores[2].get(name, -1))
+      scores[name] =  int(i_scores[0].get(name, 0))
+      scores[name] += int(i_scores[1].get(name, 0))
+      scores[name] += int(i_scores[2].get(name, 0))
   except TypeError:
       pass
 
