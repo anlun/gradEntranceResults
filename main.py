@@ -29,13 +29,17 @@ with open(names_filename, 'rb') as cur_file:
 
 eng_file = 'http://abiturient.spbu.ru/data/asp_doc/for_lang.htm' 
 eng_filename = 'for_lang.htm'
-# urllib.urlretrieve(eng_file, eng_filename)
+urllib.urlretrieve(eng_file, eng_filename)
 
 phil_file = 'http://abiturient.spbu.ru/data/asp_doc/filosofia.htm'
 phil_filename = 'filosofia.htm'
-# urllib.urlretrieve(phil_file, phil_filename)
+urllib.urlretrieve(phil_file, phil_filename)
 
-i_scores = [{}, {}]
+spec_file = 'http://abiturient.spbu.ru/data/asp_doc/spec.htm'
+spec_filename = 'spec.htm'
+urllib.urlretrieve(spec_file, spec_filename)
+
+i_scores = [{}, {}, {}]
 file_number = 0
 
 def updateEngResults(filename = eng_filename, file_number = 0):
@@ -75,10 +79,27 @@ def updatePhilResults(filename = phil_filename, file_number = 1):
       i_scores[file_number][name] = score
 updatePhilResults()
 
+def updateSpecResults(filename = spec_filename, file_number = 2):
+  with open(filename, 'rb') as cur_file:
+    soup = BeautifulSoup(cur_file.read())
+    table = soup.find('table')
+    rows = table.findAll('tr')
+    for tr in rows:
+      cols  = tr.findAll('td')
+      name  = cols[0].find(text = True)
+      score = cols[2].find(text = True)
+      if name == None:
+        continue
+      name = name.replace('\n  ', ' ')
+      i_scores[file_number][name] = score
+updateSpecResults()
+
 scores = {}
 for name in names:
   try:
-      scores[name] = int(i_scores[0].get(name, -1)) + int(i_scores[1].get(name, -1))
+      scores[name] =  int(i_scores[0].get(name, -1))
+      scores[name] += int(i_scores[1].get(name, -1))
+      scores[name] += int(i_scores[2].get(name, -1))
   except TypeError:
       pass
 
