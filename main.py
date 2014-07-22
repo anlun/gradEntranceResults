@@ -29,15 +29,16 @@ with open(names_filename, 'rb') as cur_file:
 
 eng_file = 'http://abiturient.spbu.ru/data/asp_doc/for_lang.htm' 
 eng_filename = 'for_lang.htm'
-urllib.urlretrieve(eng_file, eng_filename)
+# urllib.urlretrieve(eng_file, eng_filename)
 
 phil_file = 'http://abiturient.spbu.ru/data/asp_doc/filosofia.htm'
 phil_filename = 'filosofia.htm'
-urllib.urlretrieve(phil_file, phil_filename)
+# urllib.urlretrieve(phil_file, phil_filename)
 
 i_scores = [{}, {}]
 file_number = 0
-for filename in [phil_filename, eng_filename]:
+
+def updateEngResults(filename = eng_filename, file_number = 0):
   with open(filename, 'rb') as cur_file:
     soup = BeautifulSoup(cur_file.read())
     table = soup.find('table')
@@ -49,9 +50,30 @@ for filename in [phil_filename, eng_filename]:
       if name == None:
         continue
       name = name.replace('\n  ', ' ')
-      #print name
       i_scores[file_number][name] = score
-  file_number += 1
+updateEngResults()
+
+def updatePhilResults(filename = phil_filename, file_number = 1):
+  def textFromP(td):
+    try:
+      return td.findAll('p')[0].find(text = True)
+    except:
+      return None
+  with open(filename, 'rb') as cur_file:
+    soup = BeautifulSoup(cur_file.read())
+    table = soup.find('table')
+    rows = table.findAll('tr')
+    for tr in rows:
+      cols  = tr.findAll('td')
+      td_num = 0
+      res = map(textFromP, cols) 
+      name  = res[1]
+      score = res[2]
+      if name == None:
+        continue
+      name = name.replace('\n  ', ' ')
+      i_scores[file_number][name] = score
+updatePhilResults()
 
 scores = {}
 for name in names:
