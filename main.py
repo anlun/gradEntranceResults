@@ -27,6 +27,8 @@ with open(names_filename, 'rb') as cur_file:
       names.append(cur_name.strip())
     counter = (counter + 1) % 6
 
+#names += ['Гражевская Александра Сергеевна']
+
 eng_file = 'http://abiturient.spbu.ru/data/asp_doc/for_lang.htm' 
 eng_filename = 'for_lang.htm'
 urllib.urlretrieve(eng_file, eng_filename)
@@ -57,12 +59,13 @@ def updateEngResults(filename = eng_filename, file_number = 0):
       i_scores[file_number][name] = score
 updateEngResults()
 
+def textFromP(td):
+  try:
+    return td.findAll('p')[0].find(text = True)
+  except:
+    return None
+
 def updatePhilResults(filename = phil_filename, file_number = 1):
-  def textFromP(td):
-    try:
-      return td.findAll('p')[0].find(text = True)
-    except:
-      return None
   with open(filename, 'rb') as cur_file:
     soup = BeautifulSoup(cur_file.read())
     table = soup.find('table')
@@ -86,8 +89,9 @@ def updateSpecResults(filename = spec_filename, file_number = 2):
     rows = table.findAll('tr')
     for tr in rows:
       cols  = tr.findAll('td')
-      name  = cols[0].find(text = True)
-      score = cols[2].find(text = True)
+      res = map(textFromP, cols) 
+      name  = res[0]
+      score = res[2]
       if name == None:
         continue
       name = name.replace('\n  ', ' ')
